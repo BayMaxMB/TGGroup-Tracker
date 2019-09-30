@@ -1,0 +1,1 @@
+DeleteMessage: User Added, User Left

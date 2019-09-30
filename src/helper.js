@@ -1,5 +1,5 @@
 module.exports = {
-	logStart() {
-		console.log('Bot has been started ...');
-	}	
+    logStart() {
+        console.log('Bot has been Started ...');
+    }
 }
