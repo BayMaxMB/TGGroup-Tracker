@@ -1,7 +1,28 @@
 const fs = require('fs');
 const dbAdress = 'database.json';
-if (!(fs.existsSync(dbAdress))) {
-    fs.writeFileSync(dbAdress, JSON.stringify({}));
+// if (!(fs.existsSync(dbAdress))) {
+    // fs.writeFileSync(dbAdress, JSON.stringify({}));
+//     console.log('File was not existed')
+// }
+// else 
+// if (JSON.parse(fs.readFileSync(dbAdress))) {
+//     console.log('File was empty')
+// }
+function readDB() {
+    let db = {};
+    try {
+        db = JSON.parse(fs.readFileSync(dbAdress, 'utf-8'))
+    }
+    catch (e) {
+        console.log('val: ' + e.message)
+        console.log(e.code)
+        if (e.code == 'ENOENT') {
+            console.log('eeeee')
+        }
+        fs.writeFileSync(dbAdress, JSON.stringify({}, null, '\t'));
+        readDB();
+    }
+    return db;
 }
 
 module.exports = {
@@ -10,14 +31,16 @@ module.exports = {
     },
     
     updateDB(id, newUsers) {
-        const db = JSON.parse(fs.readFileSync(dbAdress, 'utf-8'));
-        if (db[id] == undefined) {
-            db[id] = newUsers.map((el) => el.id);
-        }
-        else if
+        const db = readDB();
         const newUsers_IDs = newUsers.map((el) => el.id);
-        db[id] = db[id] ? db[id].concat(newUsers_IDs) : newUsers_IDs;
-        fs.writeFileSync(dbAdress, JSON.stringify(db));
+        if (db[id] == undefined) {
+            db[id] = newUsers_IDs;
+            console.log(`${id} was not declared`)
+        }
+        else {
+            db[id] = [...new Set(db[id].concat(newUsers_IDs))];
+        }
+        fs.writeFileSync(dbAdress, JSON.stringify(db, null, '\t'));
     }
     
 }

@@ -1,2 +1,1 @@
-let f = {}
-    console.log(f.length)
+console.log([null].length)
