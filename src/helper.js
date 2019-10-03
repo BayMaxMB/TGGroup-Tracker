@@ -32,7 +32,7 @@ module.exports = {
     
     updateDB(id, newUsers) {
         const db = readDB();
-        const newUsers_IDs = newUsers.map((el) => el.id);
+        const newUsers_IDs = newUsers.map((el) => (!(el.is_bot)) ? el.id : false).filter(x => x);
         if (db[id] == undefined) {
             db[id] = newUsers_IDs;
             console.log(`${id} was not declared`)
