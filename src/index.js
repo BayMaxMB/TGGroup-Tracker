@@ -10,15 +10,12 @@ _.logStart();
 
 bot.on('message', msg => {
     console.log('New Message ', msg);
-
-    if (msg.new_chat_members) {
-        _.updateDB(msg.from.id, msg.new_chat_members);
-        // bot.sendMessage(msg.chat.id, `New Member ${msg.new_chat_members[0].first_name}`);
-        // bot.deleteMessage(msg.chat.id, msg.message_id);
-    } else if (msg.left_chat_member) {
-        // console.log('New Message ', msg);
-        // bot.sendMessage(msg.chat.id, `Left Member ${msg.left_chat_member.first_name}`);
-        // bot.deleteMessage(msg.chat.id, msg.message_id);
+    const id = msg.from.id;
+    const isBot = msg.from.is_bot;
+    if (!isBot && msg.new_chat_members && (id != msg.new_chat_member.id)) {
+        _.addDB(id, msg.new_chat_members);
+    } else if (!isBot && msg.left_chat_member && !msg.left_chat_member.is_bot) {
+        _.delDB(id, msg.left_chat_member.id)
     }
 });
 

@@ -1,1 +1,11 @@
 DeleteMessage: User Added, User Left
+ignore: user/bot join, bot adds user, user adds bot, bot left
+
+user can add bot
+user can add human
+user cannot add blocked users
+user cannot remove users
+
+admin can add user/bot
+if admin removes user -> that user will be in ban list -> user cannot add that user
+admin can remove user
