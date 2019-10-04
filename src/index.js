@@ -3,7 +3,9 @@ const fs = require('fs');
 const config = require('./config');
 const _ = require('./helper');
 
-const bot = new TelegramBot(config.TOKEN);
+const bot = new TelegramBot(config.TOKEN, {
+    polling: true
+});
 
 _.logStart();
 
@@ -14,7 +16,6 @@ bot.on('message', msg => {
     switch (chatType) {
         case 'group':
         case 'supergroup': {
-            console.log('got from sugr')
             const id = msg.from.id;
             const isBot = msg.from.is_bot;
             if (!isBot && msg.new_chat_members && (id != msg.new_chat_member.id)) {
