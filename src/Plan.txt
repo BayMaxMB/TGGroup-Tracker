@@ -9,3 +9,6 @@ user cannot remove users
 admin can add user/bot
 if admin removes user -> that user will be in ban list -> user cannot add that user
 admin can remove user
+
+private.id>0
+channel, supergroup, group .id<0
