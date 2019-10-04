@@ -1,33 +1,9 @@
 const TelegramBot = require('node-telegram-bot-api');
-const express = require('express');
-const bodyParser = require('body-parser');
 const fs = require('fs');
 const config = require('./config');
 const _ = require('./helper');
 
-const url = 'https://baymaxmb.alwaysdata.net';
-const port = 8443;
-const TOKEN = config.TOKEN;
-
-// No need to pass any parameters as we will handle the updates with Express
-const bot = new TelegramBot(TOKEN);
-
-// This informs the Telegram servers of the new webhook.
-bot.setWebHook(`${url}/${TOKEN}`);
-
-const app = express();
-// parse the updates to JSON
-app.use(bodyParser.json());
-
-// We are receiving updates at the route below!
-app.post(`/`, (req, res) => {
-  bot.processUpdate(req.body);
-  res.sendStatus(200);
-});
-// Start Express Server
-app.listen(port, () => {
-  console.log(`Express server is listening on ${port}`);
-});
+const bot = new TelegramBot(config.TOKEN);
 
 _.logStart();
 
