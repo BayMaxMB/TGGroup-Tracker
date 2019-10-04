@@ -18,7 +18,3 @@ bot.on('message', msg => {
         _.delDB(id, msg.left_chat_member.id)
     }
 });
-
-function wrote(err) {
-    console.log(err)
-}
