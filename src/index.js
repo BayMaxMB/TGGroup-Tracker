@@ -8,6 +8,7 @@ const bot = new TelegramBot(config.TOKEN, {
 });
 
 _.logStart();
+bot.sendMessage(482944903, 'I\'m Alive at Heroku!');
 
 bot.on('message', msg => {
     console.log('\n---------- New Message ----------\n', msg);
