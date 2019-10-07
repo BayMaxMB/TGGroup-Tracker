@@ -14,7 +14,7 @@ bot.on('message', msg => {
     const chatType = msg.chat.type;
     const chatID = msg.chat.id;
     switch (chatType) {
-        case 'group':
+        case 'group': console.log('From Group');
         case 'supergroup': {
             const id = msg.from.id;
             if (!msg.from.is_bot) {
@@ -27,7 +27,9 @@ bot.on('message', msg => {
             break;
         }
         case 'private' : {
-            
+            if (msg.text == '/me') {
+              bot.sendMessage(chatID, _.getDB(chatID));
+            }
             break;
         }
         case 'channel' : {

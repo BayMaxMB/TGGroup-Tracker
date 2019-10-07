@@ -46,7 +46,7 @@ module.exports = {
                     db[chatID][adder].splice(target_index, 1);
                     if (db[chatID][adder].length == 0) {
                         delete db[chatID][adder];
-                        if (db[chatID].length == 0) {
+                        if (Object.keys(db[chatID]).length == 0) {
                             delete db[chatID];
                         }
                     }
@@ -55,5 +55,26 @@ module.exports = {
             });
             fs.writeFileSync(dbAdress, JSON.stringify(db, null, '\t'));
         }
+    },
+
+    getDB(id) {
+        const db = readDB();
+        let answer = {};
+        Object.keys(db).forEach(chat => {
+            if (db[chat][id] != undefined) {
+                answer[chat] = db[chat][id];
+            }
+        });
+        return (answer != {}) ? this.parseDB(answer) : 'You didn\'t add anyone';
+    },
+
+    parseDB(answer) {
+        let ansTxt = 'You added to these chats:\n';
+        Object.keys(answer).forEach(chat => {
+            ansTxt += `${chat}:\n\t`;
+            ansTxt += answer[chat].join(',\n\t')
+            ansTxt += '\n';
+        });
+        return ansTxt;
     }
 }
