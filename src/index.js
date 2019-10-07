@@ -10,18 +10,19 @@ const bot = new TelegramBot(config.TOKEN, {
 _.logStart();
 
 bot.on('message', msg => {
-    console.log('New Message ', msg);
+    console.log('\n---------- New Message ----------\n', msg);
     const chatType = msg.chat.type;
     const chatID = msg.chat.id;
     switch (chatType) {
         case 'group':
         case 'supergroup': {
             const id = msg.from.id;
-            const isBot = msg.from.is_bot;
-            if (!isBot && msg.new_chat_members && (id != msg.new_chat_member.id)) {
-                _.addDB(id, msg.new_chat_members);
-            } else if (!isBot && msg.left_chat_member && !msg.left_chat_member.is_bot) {
-                _.delDB(id, msg.left_chat_member.id)
+            if (!msg.from.is_bot) {
+                if (msg.new_chat_members && (id != msg.new_chat_member.id)) {
+                    _.addDB(chatID, id, msg.new_chat_members);
+                } else if (msg.left_chat_member && !msg.left_chat_member.is_bot) {
+                    _.delDB(chatID, id, msg.left_chat_member.id)
+                }
             }
             break;
         }
