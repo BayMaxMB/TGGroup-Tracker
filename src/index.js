@@ -4,8 +4,14 @@ const config = require('./config');
 const _ = require('./helper');
 
 const bot = new TelegramBot(config.TOKEN, {
-    polling: true
+    webHook: {
+        port: config.port,
+        autoOpen: false
+    }
 });
+
+bot.openWebHook();
+bot.setWebHook(`${config.url}/bot${config.TOKEN}`);
 
 _.logStart();
 bot.sendMessage(482944903, 'I\'m Alive at Heroku!');
