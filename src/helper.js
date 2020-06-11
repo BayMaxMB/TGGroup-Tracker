@@ -16,35 +16,65 @@ function readDB() {
 
 module.exports = {
     logStart() {
-        console.log('Bot has been Started ...');
+        console.log('Bot has been Started ...\n');
     },
     
-    addDB(id, newUsers) {
+    addDB(chatID, id, newUsers) {
         const newUsers_IDs = newUsers.map((el) => (!(el.is_bot)) ? el.id : false).filter(x => x);
         if (newUsers_IDs.length != 0) {
             const db = readDB();
-            if (db[id] == undefined) {
-                db[id] = newUsers_IDs;
+            if (db[chatID] == undefined) {
+                db[chatID] = {};
+                db[chatID][id] = newUsers_IDs;
+            }
+            else if (db[chatID][id] == undefined) {
+                db[chatID][id] = newUsers_IDs;
             }
             else {
-                db[id] = [...new Set(db[id].concat(newUsers_IDs))];
+                db[chatID][id] = [...new Set(db[chatID][id].concat(newUsers_IDs))];
             }
             fs.writeFileSync(dbAdress, JSON.stringify(db, null, '\t'));
         }
     },
     
-    delDB(id, leftID) {
+    delDB(chatID, id, leftID) {
         const db = readDB();
-        Object.keys(db).some(el => {
-            const target_index = db[el].indexOf(leftID);
-            if (target_index >= 0) {
-                db[el].splice(target_index, 1);
-                if (db[el].length == 0) {
-                    delete db[el];
+        if(db[chatID] != undefined) {
+            Object.keys(db[chatID]).some(adder => {
+                const target_index = db[chatID][adder].indexOf(leftID);
+                if (target_index != -1) {
+                    db[chatID][adder].splice(target_index, 1);
+                    if (db[chatID][adder].length == 0) {
+                        delete db[chatID][adder];
+                        if (Object.keys(db[chatID]).length == 0) {
+                            delete db[chatID];
+                        }
+                    }
+                    return true;
                 }
-                return true;
+            });
+            fs.writeFileSync(dbAdress, JSON.stringify(db, null, '\t'));
+        }
+    },
+
+    getDB(id) {
+        const db = readDB();
+        let answer = {};
+        Object.keys(db).forEach(chat => {
+            if (db[chat][id] != undefined) {
+                answer[chat] = db[chat][id];
             }
         });
-        fs.writeFileSync(dbAdress, JSON.stringify(db, null, '\t'));
+        return (answer != {}) ? this.parseDB(answer) : 'You didn\'t add anyone';
+    },
+
+    parseDB(answer) {
+        let ansTxt = 'You added to these chats:\n';
+        Object.keys(answer).forEach(chat => {
+            ansTxt += `${chat}:\n\t`;
+            ansTxt += answer[chat].join(',\n\t')
+            ansTxt += '\n';
+        });
+        return ansTxt;
     }
 }
